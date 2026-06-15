@@ -1,0 +1,45 @@
+@startuml
+
+actor Client
+
+participant "Portfolio Service\n(JWT Filter)" as Filter
+participant "Controller" as Controller
+participant "Service Layer" as Service
+participant "Redis Cache" as Cache
+participant "Repository" as Repo
+database "MongoDB" as DB
+
+== Request Flow ==
+
+Client -> Filter : HTTP Request (JWT)
+
+Filter -> Filter : Validate JWT
+Filter -> Filter : Extract userId
+
+Filter -> Controller : Forward request (userId)
+
+Controller -> Service : getProfile(userId)
+
+== Cache Check ==
+
+Service -> Cache : GET profile:userId
+
+alt Cache Hit
+    Cache --> Service : Profile Data
+    Service --> Controller : Return DTO
+    Controller --> Client : Response (200 OK)
+
+else Cache Miss
+    Cache --> Service : null
+
+    Service -> Repo : findByUserId(userId)
+    Repo -> DB : Query
+    DB --> Repo : Profile Entity
+    Repo --> Service : Profile
+
+    Service -> Cache : PUT profile:userId
+    Service --> Controller : Return DTO
+    Controller --> Client : Response (200 OK)
+end
+
+@enduml
