@@ -19,6 +19,8 @@ public class Profile {
     private String id;
     private String userId; // from JWT
     private String email;
+    private String profileImageKey;
+    private String mobileNumber;
 
     private String fullName;
     private String headline;

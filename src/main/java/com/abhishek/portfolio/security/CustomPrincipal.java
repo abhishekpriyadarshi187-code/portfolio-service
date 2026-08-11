@@ -9,4 +9,5 @@ public class CustomPrincipal {
 
     private final String userId;
     private final String email;
+    private final String mobileNumber;
 }

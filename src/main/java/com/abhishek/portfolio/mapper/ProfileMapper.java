@@ -3,18 +3,24 @@ package com.abhishek.portfolio.mapper;
 import com.abhishek.portfolio.dto.*;
 import com.abhishek.portfolio.model.*;
 import com.abhishek.portfolio.security.CustomPrincipal;
+import com.abhishek.portfolio.storage.S3ProfileImageStorageService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
 public class ProfileMapper {
+
+    private final S3ProfileImageStorageService profileImageStorageService;
 
     public Profile toEntity(ProfileRequest request, CustomPrincipal principal) {
         return Profile.builder()
                 .userId(principal.getUserId())
                 .email(principal.getEmail())
+                .mobileNumber(principal.getMobileNumber())
                 .fullName(request.getFullName())
                 .headline(request.getHeadline())
                 .about(request.getAbout())
@@ -30,6 +36,7 @@ public class ProfileMapper {
     public Profile updateEntity(Profile existing, ProfileRequest request, CustomPrincipal principal) {
         existing.setUserId(principal.getUserId());
         existing.setEmail(principal.getEmail());
+        existing.setMobileNumber(principal.getMobileNumber());
         existing.setFullName(request.getFullName());
         existing.setHeadline(request.getHeadline());
         existing.setAbout(request.getAbout());
@@ -47,7 +54,10 @@ public class ProfileMapper {
         return ProfileResponse.builder()
                 .fullName(profile.getFullName())
                 .headline(profile.getHeadline())
+                .email(profile.getEmail())
+                .mobileNumber(profile.getMobileNumber())
                 .about(profile.getAbout())
+                .profileImageUrl(profileImageStorageService.generatePresignedUrl(profile.getProfileImageKey()))
                 .skills(mapSkillDTOs(profile.getSkills()))
                 .experiences(mapExperienceDTOs(profile.getExperiences()))
                 .education(mapEducationDTOs(profile.getEducation()))

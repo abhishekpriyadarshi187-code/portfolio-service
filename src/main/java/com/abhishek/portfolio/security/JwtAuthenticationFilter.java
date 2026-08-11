@@ -40,11 +40,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 final String userId = jwtUtil.extractUserId(token);
                 final String email = jwtUtil.extractEmail(token);
                 final String role = jwtUtil.extractRole(token);
+                final String mobileNumber = jwtUtil.extractMobileNumber(token);
                 System.out.println("Extracted userId: " + userId);
                 System.out.println("Extracted email: " + email);
                 System.out.println("Extracted role: " + role);
 
-                CustomPrincipal principal = new CustomPrincipal(userId, email);
+                CustomPrincipal principal = new CustomPrincipal(userId, email, mobileNumber);
 
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(principal, null, List.of(new SimpleGrantedAuthority(role)));

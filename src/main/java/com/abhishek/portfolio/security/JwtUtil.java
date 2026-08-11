@@ -31,6 +31,10 @@ public class JwtUtil {
         return extractAllClaims(token).get("email", String.class);
     }
 
+    public String extractMobileNumber(String token) {
+        return extractAllClaims(token).get("mobileNumber", String.class);
+    }
+
     public String extractRole(String token) {
         return extractAllClaims(token).get("role", String.class);
     }

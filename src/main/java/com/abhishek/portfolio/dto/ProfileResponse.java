@@ -12,6 +12,10 @@ public class ProfileResponse {
     private String fullName;
     private String headline;
     private String about;
+    private String email;
+    private String mobileNumber;
+
+    private String profileImageUrl;
 
     private List<SkillDTO> skills;
     private List<ExperienceDTO> experiences;
